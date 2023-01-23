@@ -8,6 +8,7 @@
 }
 
 #search-form {
+    margin-top: .5em;
     position: relative;
     width: 20%;
 }
