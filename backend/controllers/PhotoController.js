@@ -1,7 +1,6 @@
 const User = require('../models/User');
 const Photo = require('../models/Photo');
 const mongoose = require('mongoose');
-const { RenderHTMLSource } = require('react-native-render-html');
 
 const insertPhoto = async (req, res) => {
     const { title } = req.body;
