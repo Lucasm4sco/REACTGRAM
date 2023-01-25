@@ -8,7 +8,28 @@ const register = async (data) => {
             .then(res => res.json())
             .catch(err => err);
 
-        if(res)
+        if(res && !res.errors)
+            localStorage.setItem('user', JSON.stringify(res));
+
+        return res;
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const logout = async () => {
+    localStorage.removeItem('user');
+}
+
+const login = async (data) => {
+    const config = requestConfig('POST', data);
+
+    try {
+        const res = await fetch(api + '/users/login', config)
+            .then(res => res.json())
+            .catch(err => err);
+
+        if(res && !res.errors)
             localStorage.setItem('user', JSON.stringify(res));
 
         return res;
@@ -19,6 +40,8 @@ const register = async (data) => {
 
 const authService = {
     register,
+    logout,
+    login
 }
 
 export default authService;
