@@ -64,8 +64,6 @@ const EditProfile = () => {
         setProfileImage(image);
     }
 
-   console.log(user)
-
     return (
         <div id='edit-profile'>
             <h2>Edite seus dados</h2>

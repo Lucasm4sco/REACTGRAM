@@ -1,0 +1,74 @@
+#profile {
+    width: 50%;
+    margin: 0 auto;
+}
+
+#profile h2 {
+    margin-bottom: .7em;
+}
+
+#profile h3 {
+    margin: .8em 0;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 1em;
+    border-bottom: 1px solid #363636;
+}
+
+.profile-header img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 2em;
+}
+
+.new-photo {
+    padding: 1em;
+    border-bottom: 1px solid #363636;
+}
+
+.photos-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.user-photos h2 {
+    margin: 1em .2em;
+}
+
+.photo {
+    width: 32%;
+    margin: 0.3%;
+}
+
+.photo img {
+    width: 100%;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.actions svg {
+    cursor: pointer;
+}
+
+.edit-photo {
+    margin-bottom: 1em;
+}
+
+.edit-photo p {
+    margin: .9em .2em;
+}
+
+.edit-photo img {
+    width: 100%;
+    margin-bottom: 1em;
+}
