@@ -51,7 +51,7 @@ const login = async (req, res) => {
         return res.status(422).json({ errors: ['Senha inválida'] });
 
     res.status(201).json({
-        id: user._id,
+        _id: user._id,
         profileImage: user.profileImage,
         token: generateToken(user._id)
     })

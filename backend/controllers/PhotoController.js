@@ -39,7 +39,7 @@ const deletePhoto = async (req, res) => {
         await Photo.findByIdAndDelete(photo._id);
 
         return res.status(200).json({
-            id: photo._id,
+            _id: photo._id,
             message: 'Foto excluída com sucesso.'
         });
     } catch (error) {
