@@ -36,7 +36,7 @@ const Navbar = () => {
                         </li>
                         {user && (
                             <li>
-                                <Link to={`/users/${user.id}`}>
+                                <Link to={`/users/${user._id}`}>
                                     <BsFillCameraFill />
                                 </Link>
                             </li>

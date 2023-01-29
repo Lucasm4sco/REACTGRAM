@@ -10,6 +10,10 @@
     margin: .8em;
 }
 
+#home .photo-item p {
+    margin: .8em 0;
+}
+
 .photo-author {
     text-align: left;
 }

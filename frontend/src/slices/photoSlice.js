@@ -66,7 +66,7 @@ export const updatePhoto = createAsyncThunk(
 
         return data;
     }
-)
+);
 
 export const getPhoto = createAsyncThunk(
     'photo/getphoto',
@@ -79,7 +79,7 @@ export const getPhoto = createAsyncThunk(
 
         return data;
     }
-)
+);
 
 export const like = createAsyncThunk(
     'photo/like',
@@ -92,7 +92,7 @@ export const like = createAsyncThunk(
 
         return data;
     }
-)
+);
 
 export const comment = createAsyncThunk(
     'photo/comment',
@@ -103,6 +103,19 @@ export const comment = createAsyncThunk(
             commentData._id,
             token
         );
+
+        if (data.errors)
+            return thunkAPI.rejectWithValue(data.errors[0]);
+
+        return data;
+    }
+);
+
+export const getPhotos = createAsyncThunk(
+    'photo/getall',
+    async (_,thunkAPI) => {
+        const token = thunkAPI.getState().auth.user.token;
+        const data = await photoService.getPhotos(token);
 
         if (data.errors)
             return thunkAPI.rejectWithValue(data.errors[0]);
@@ -160,7 +173,7 @@ export const photoSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.error = null;
-                state.photos = state.photos.filter(photo => photo._id !== action.payload.id);
+                state.photos = state.photos.filter(photo => photo._id !== action.payload._id);
                 state.message = action.payload.message;
             })
             .addCase(updatePhoto.rejected, (state, action) => {
@@ -226,6 +239,16 @@ export const photoSlice = createSlice({
             .addCase(comment.pending, (state) => {
                 state.loading = true;
                 state.error = false;
+            })
+            .addCase(getPhotos.pending, (state) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(getPhotos.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.error = null;
+                state.photos = action.payload;
             })
     }
 });
