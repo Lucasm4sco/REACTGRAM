@@ -1,0 +1,59 @@
+#photo {
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 2em;
+}
+
+#photo h3 {
+    margin: .8em;
+}
+
+.message-container {
+    margin: 1em 0;
+}
+
+.comments {
+    text-align: left;
+}
+
+.comments form{
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #363636;
+}
+
+#photo .author {
+    display: flex;
+    font-weight: bold;
+    flex-wrap: wrap;
+}
+
+#photo .author img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1em;
+}
+
+#photo .no-comments {
+    margin: 1em;
+    width: 100%;
+    text-align: center;
+}
+
+.comment p {
+    margin: .8em .4em 2em;
+}
+
+@media (max-width: 700px) {
+    #photo {
+        width: 60%;
+    }
+}
+
+@media (max-width: 378px) {
+    #photo {
+        width: 90%;
+    }
+}
