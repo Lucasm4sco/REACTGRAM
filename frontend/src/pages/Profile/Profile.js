@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useResetComponentMessage } from '../../hooks/useResetComponentMessage';
 import { BsFillEyeFill, BsPencilFill, BsXLg } from 'react-icons/bs';
 import { Link, useParams } from 'react-router-dom';
 import { getUserDetails } from '../../slices/userSlice';
 import { uploads } from '../../utils/config';
-import { publishPhoto, resetMessage, getUserPhotos, deletePhoto, updatePhoto } from '../../slices/photoSlice';
+import { publishPhoto, getUserPhotos, deletePhoto, updatePhoto } from '../../slices/photoSlice';
 import './Profile.css';
 
 import Message from '../../components/Message/Message';
@@ -12,6 +13,7 @@ import Message from '../../components/Message/Message';
 const Profile = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const resetComponentMessage = useResetComponentMessage(dispatch, 'photo');
     const { user, loading } = useSelector(state => state.user);
     const { user: userAuth } = useSelector(state => state.auth);
     const { photos, loading: loadingPhoto, message: messagePhoto, error: errorPhoto } = useSelector(state => state.photo);
@@ -25,12 +27,6 @@ const Profile = () => {
     const [editId, setEditId] = useState('');
     const [editImage, setEditImage] = useState('');
     const [editTitle, setEditTitle] = useState('');
-
-    const resetComponentMessage = () => {
-        setTimeout(() => {
-            dispatch(resetMessage())
-        }, 2000)
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();

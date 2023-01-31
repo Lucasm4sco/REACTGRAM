@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useResetComponentMessage } from '../../hooks/useResetComponentMessage';
 import { uploads } from '../../utils/config';
 import './EditProfile.css';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { profile, resetMessage, updateProfile } from '../../slices/userSlice';
+import { profile, updateProfile } from '../../slices/userSlice';
 
 import Message from '../../components/Message/Message';
 
@@ -16,6 +17,7 @@ const EditProfile = () => {
     const [previewImage, setPreviewImage] = useState('');
 
     const dispatch = useDispatch();
+    const resetComponentMessage = useResetComponentMessage(dispatch, 'user');
     const { user, message, error, loading } = useSelector(state => state.user);
 
     useEffect(() => {
@@ -49,13 +51,9 @@ const EditProfile = () => {
         const formData = new FormData();
 
         Object.keys(userData).forEach(key => formData.append(key, userData[key]))
-        console.log(formData)
 
         dispatch(updateProfile(formData));
-
-        setTimeout(() => {
-            dispatch(resetMessage())
-        }, 2000);
+        resetComponentMessage();
     }
 
     const handleFile = (e) => {

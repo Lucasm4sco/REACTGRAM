@@ -14,7 +14,7 @@ const Search = () => {
     const search = query.get('q');
 
     const dispatch = useDispatch();
-    const resetMessage = useResetComponentMessage(dispatch);
+    const resetMessage = useResetComponentMessage(dispatch, 'photo');
     const { user } = useSelector(state => state.auth);
     const { photos, loading } = useSelector(state => state.photo);
 

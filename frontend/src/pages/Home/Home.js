@@ -10,7 +10,7 @@ import PhotoItem from '../../components/PhotoItem/PhotoItem';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const resetMessage = useResetComponentMessage(dispatch);
+  const resetComponentMessage = useResetComponentMessage(dispatch, 'photo');
   const { user } = useSelector(state => state.auth);
   const { photos, loading } = useSelector(state => state.photo);
 
@@ -20,7 +20,7 @@ const Home = () => {
 
   const handleLike = (photo) => {
     dispatch(like(photo._id));
-    resetMessage();
+    resetComponentMessage();
   }
 
   if (loading)

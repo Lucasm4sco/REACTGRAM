@@ -15,13 +15,13 @@ const Photo = () => {
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.auth);
     const { photo, loading, message, error } = useSelector(state => state.photo);
-    const resetMessage = useResetComponentMessage(dispatch);
+    const resetComponentMessage = useResetComponentMessage(dispatch, 'photo');
 
     const [commentText, setCommentText] = useState('');
 
     const handleLike = () => {
         dispatch(like(photo._id))
-        resetMessage()
+        resetComponentMessage()
     }
 
     const handleComment = (e) => {
@@ -34,7 +34,7 @@ const Photo = () => {
 
         dispatch(comment(commentData));
         setCommentText('');
-        resetMessage();
+        resetComponentMessage();
     }
 
     useEffect(() => {
