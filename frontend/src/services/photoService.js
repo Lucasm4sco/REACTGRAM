@@ -12,7 +12,7 @@ const publishPhoto = async (data, token) => {
     } catch (error) {
         console.log(error.message);
     }
-};
+}
 
 const getUserPhotos = async (id, token) => {
     const config = requestConfig('GET', null, token);
@@ -26,7 +26,7 @@ const getUserPhotos = async (id, token) => {
     } catch (error) {
         console.log(error.message);
     }
-};
+}
 
 const deletePhoto = async (id, token) => {
     const config = requestConfig('DELETE', null, token);
@@ -40,7 +40,7 @@ const deletePhoto = async (id, token) => {
     } catch (error) {
         console.log(error.message);
     }
-};
+}
 
 const updatePhoto = async (data, id, token) => {
     const config = requestConfig('PUT', data, token);
@@ -102,7 +102,21 @@ const getPhotos = async (token) => {
     const config = requestConfig('GET', null, token);
 
     try {
-        const res = await fetch(api+'/photo', config)
+        const res = await fetch(api + '/photo', config)
+            .then(res => res.json())
+            .catch(err => err)
+
+        return res;
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const searchPhotos = async (query, token) => {
+    const config = requestConfig('GET', null, token);
+
+    try {
+        const res = await fetch(api + '/photo/search?q=' + query, config)
             .then(res => res.json())
             .catch(err => err)
 
@@ -120,7 +134,8 @@ const photoService = {
     getPhoto,
     like,
     comment,
-    getPhotos
+    getPhotos,
+    searchPhotos
 };
 
 export default photoService;

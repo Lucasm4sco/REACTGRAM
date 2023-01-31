@@ -8,6 +8,7 @@ import Register from './pages/Auth/Register';
 import EditProfile from './pages/EditProfile/EditProfile';
 import Profile from './pages/Profile/Profile';
 import Photo from './pages/Photo/Photo';
+import Search from './pages/Search/Search';
 
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
@@ -47,6 +48,10 @@ const App = () => {
             <Route
               path='/photos/:id'
               element={auth ? <Photo /> : <Navigate to='/login' />}
+            />
+            <Route
+              path='/search'
+              element={auth ? <Search /> : <Navigate to='/login' />}
             />
           </Routes>
         </div>
