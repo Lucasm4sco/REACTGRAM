@@ -18,7 +18,7 @@ const Navbar = () => {
     const handleSearch = (e) => {
         e.preventDefault();
 
-        if(query)
+        if (query)
             return navigate(`/search?q=${query}`)
     }
 
@@ -30,16 +30,18 @@ const Navbar = () => {
 
     return (
         <nav id='nav'>
-            <Link to='/'>ReactGram</Link>
-            <form id='search-form' onSubmit={handleSearch}>
-                <BsSearch />
-                <input
-                    type="text"
-                    placeholder='pesquisar'
-                    value={query || ''}
-                    onChange={e => setQuery(e.target.value)}
-                />
-            </form>
+            <Link to='/' className='logo'>ReactGram</Link>
+            {auth && (
+                <form id='search-form' onSubmit={handleSearch}>
+                    <BsSearch />
+                    <input
+                        type="text"
+                        placeholder='pesquisar'
+                        value={query || ''}
+                        onChange={e => setQuery(e.target.value)}
+                    />
+                </form>
+            )}
             <ul id="nav-links">
                 {auth ? (
                     <>

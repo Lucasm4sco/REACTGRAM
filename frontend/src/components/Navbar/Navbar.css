@@ -7,10 +7,15 @@
     padding: 0.1em 1em;
 }
 
+#nav .logo {
+    margin: .8em;
+}
+
 #search-form {
     margin-top: .5em;
     position: relative;
     width: 20%;
+    min-width: 80px;
 }
 
 #search-form input {
@@ -41,4 +46,20 @@
 
 #nav-links svg {
     font-size: 1.5em;
+}
+
+@media (max-width: 450px) {
+    #nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        column-gap: 20%;
+    }
+
+    #nav-links {
+        padding: .5rem 0;
+    }
+
+    #nav-links li {
+        margin-right: 1.5em;
+    }
 }
