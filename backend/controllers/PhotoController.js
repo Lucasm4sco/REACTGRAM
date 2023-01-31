@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Photo = require('../models/Photo');
 const mongoose = require('mongoose');
+const deletePhotoByPatch = require('../utils/delete');
 
 const insertPhoto = async (req, res) => {
     const { title } = req.body;
@@ -41,6 +42,7 @@ const deletePhoto = async (req, res) => {
             return res.status(422).json({ errors: ['Ocorreu um erro, por favor tente novamente mais tarde.'] });
 
         await Photo.findByIdAndDelete(photo._id);
+        deletePhotoByPatch(`/photos/${photo.image}`)
 
         return res.status(200).json({
             _id: photo._id,

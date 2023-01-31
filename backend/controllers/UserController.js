@@ -3,6 +3,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const deletePhotoByPatch = require('../utils/delete');
 
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -74,9 +75,10 @@ const update = async (req, res) => {
     const { name, password, bio } = req.body;
     const reqUser = req.user;
     const profileImage = req.file ? req.file.filename : null;
-
+    
     try {
         const user = await User.findById(mongoose.Types.ObjectId(reqUser._id)).select('-password');
+        const oldProfileImage = user.profileImage;
 
         if (name)
             user.name = name;
@@ -87,13 +89,16 @@ const update = async (req, res) => {
             user.password = passwordHash;
         }
 
-        if (profileImage)
+        if (profileImage) 
             user.profileImage = profileImage;
-
+        
         if (bio)
             user.bio = bio;
 
         await user.save();
+
+        if(profileImage)
+            deletePhotoByPatch(`/users/${oldProfileImage}`);
 
         return res.status(200).json(user);
     } catch (error) {
