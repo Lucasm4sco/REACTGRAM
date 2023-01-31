@@ -15,46 +15,53 @@ const generateToken = (id) => {
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
-    const user = await User.findOne({ email })
+    try {
+        const user = await User.findOne({ email })
 
-    if (user)
-        return res.status(422).json({ errors: ['E-mail já utilizado, por favor utilize outro e-mail ou faça o login'] })
+        if (user)
+            return res.status(422).json({ errors: ['E-mail já utilizado, por favor utilize outro e-mail ou faça o login'] })
 
-    // Generate password hash
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(password, salt);
+        // Generate password hash
+        const salt = await bcrypt.genSalt();
+        const passwordHash = await bcrypt.hash(password, salt);
 
-    const newUser = await User.create({
-        name,
-        email,
-        password: passwordHash
-    });
+        const newUser = await User.create({
+            name,
+            email,
+            password: passwordHash
+        });
 
-    if (!newUser)
-        return res.status(422).json({ errors: ['Houve um erro, por favor tente mais tarde.'] });
+        if (!newUser)
+            return res.status(422).json({ errors: ['Houve um erro, por favor tente mais tarde.'] });
 
-    return res.status(201).json({
-        _id: newUser._id,
-        token: generateToken(newUser._id)
-    })
+        return res.status(201).json({
+            _id: newUser._id,
+            token: generateToken(newUser._id)
+        })
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
+    }
 };
 
 const login = async (req, res) => {
     const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
 
-    const user = await User.findOne({ email });
+        if (!user)
+            return res.status(404).json({ errors: ['Usuário não encontrado'] });
 
-    if (!user)
-        return res.status(404).json({ errors: ['Usuário não encontrado'] });
+        if (!(bcrypt.compareSync(password, user.password)))
+            return res.status(422).json({ errors: ['Senha inválida'] });
 
-    if (!(bcrypt.compareSync(password, user.password)))
-        return res.status(422).json({ errors: ['Senha inválida'] });
-
-    res.status(201).json({
-        _id: user._id,
-        profileImage: user.profileImage,
-        token: generateToken(user._id)
-    })
+        res.status(201).json({
+            _id: user._id,
+            profileImage: user.profileImage,
+            token: generateToken(user._id)
+        })
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
+    }
 }
 
 const getCurrentUser = async (req, res) => {
@@ -68,26 +75,30 @@ const update = async (req, res) => {
     const reqUser = req.user;
     const profileImage = req.file ? req.file.filename : null;
 
-    const user = await User.findById(mongoose.Types.ObjectId(reqUser._id)).select('-password');
+    try {
+        const user = await User.findById(mongoose.Types.ObjectId(reqUser._id)).select('-password');
 
-    if (name)
-        user.name = name;
+        if (name)
+            user.name = name;
 
-    if (password) {
-        const salt = await bcrypt.genSalt();
-        const passwordHash = await bcrypt.hash(password, salt);
-        user.password = passwordHash;
+        if (password) {
+            const salt = await bcrypt.genSalt();
+            const passwordHash = await bcrypt.hash(password, salt);
+            user.password = passwordHash;
+        }
+
+        if (profileImage)
+            user.profileImage = profileImage;
+
+        if (bio)
+            user.bio = bio;
+
+        await user.save();
+
+        return res.status(200).json(user);
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
     }
-
-    if (profileImage)
-        user.profileImage = profileImage;
-
-    if (bio)
-        user.bio = bio;
-
-    await user.save();
-
-    return res.status(200).json(user);
 }
 
 const getUserById = async (req, res) => {

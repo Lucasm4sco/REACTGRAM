@@ -8,19 +8,23 @@ const insertPhoto = async (req, res) => {
 
     const reqUser = req.user;
 
-    const user = await User.findById(reqUser._id);
+    try {
+        const user = await User.findById(reqUser._id);
 
-    const newPhoto = await Photo.create({
-        image,
-        title,
-        userId: user._id,
-        userName: user.name
-    });
+        const newPhoto = await Photo.create({
+            image,
+            title,
+            userId: user._id,
+            userName: user.name
+        });
 
-    if (!newPhoto)
+        if (!newPhoto)
+            return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
+
+        res.status(201).send(newPhoto);
+    } catch (error) {
         return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
-
-    res.status(201).send(newPhoto);
+    }
 }
 
 const deletePhoto = async (req, res) => {
@@ -48,30 +52,42 @@ const deletePhoto = async (req, res) => {
 }
 
 const getAllPhotos = async (req, res) => {
-    const photos = await Photo
-        .find({})
-        .sort([['createdAt', -1]])
-        .exec();
-    return res.status(200).json(photos);
+    try {
+        const photos = await Photo
+            .find({})
+            .sort([['createdAt', -1]])
+            .exec();
+        return res.status(200).json(photos);
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
+    }
 }
 
 const getUserPhotos = async (req, res) => {
     const { id } = req.params;
-    const photos = await Photo
-        .find({ userId: id })
-        .sort([['createdAt', -1]])
-        .exec();
-    return res.status(200).json(photos);
+    try {
+        const photos = await Photo
+            .find({ userId: id })
+            .sort([['createdAt', -1]])
+            .exec();
+        return res.status(200).json(photos);
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
+    }
 }
 
 const getPhotoById = async (req, res) => {
     const { id } = req.params;
-    const photo = await Photo.findById(id);
+    try {
+        const photo = await Photo.findById(mongoose.Types.ObjectId(id));
 
-    if (!photo)
-        return res.status(404).json({ errors: ['Foto não encontrada.'] });
+        if (!photo)
+            return res.status(404).json({ errors: ['Foto não encontrada.'] });
 
-    return res.status(200).json(photo);
+        return res.status(200).json(photo);
+    } catch (error) {
+        return res.status(500).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] })
+    }
 }
 
 const updatePhoto = async (req, res) => {
@@ -79,38 +95,46 @@ const updatePhoto = async (req, res) => {
     const { title } = req.body;
     const reqUser = req.user;
 
-    const photo = await Photo.findById(id);
+    try {
+        const photo = await Photo.findById(mongoose.Types.ObjectId(id));
 
-    if (!photo)
-        return res.status(404).json({ errors: ['Foto não encontrada.'] });
+        if (!photo)
+            return res.status(404).json({ errors: ['Foto não encontrada.'] });
 
-    if (!photo.userId.equals(reqUser._id))
-        return res.status(422).json({ errors: ['Ocorreu um erro, por favor tente novamente mais tarde.'] });
+        if (!photo.userId.equals(reqUser._id))
+            return res.status(422).json({ errors: ['Ocorreu um erro, por favor tente novamente mais tarde.'] });
 
-    if (title)
-        photo.title = title;
+        if (title)
+            photo.title = title;
 
-    await photo.save();
+        await photo.save();
 
-    return res.status(200).json({ photo, message: 'Foto atualizada com sucesso!' })
+        return res.status(200).json({ photo, message: 'Foto atualizada com sucesso!' })
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
+    }
 }
 
 const likePhoto = async (req, res) => {
     const { id } = req.params;
     const reqUser = req.user;
 
-    const photo = await Photo.findById(id);
+    try {
+        const photo = await Photo.findById(mongoose.Types.ObjectId(id));
 
-    if (!photo)
-        return res.status(404).json({ errors: ['Foto não encontrada.'] });
+        if (!photo)
+            return res.status(404).json({ errors: ['Foto não encontrada.'] });
 
-    if (photo.likes.includes(reqUser._id))
-        return res.status(422).json({ errors: ['Você já curtiu essa foto.'] });
+        if (photo.likes.includes(reqUser._id))
+            return res.status(422).json({ errors: ['Você já curtiu essa foto.'] });
 
-    photo.likes.push(reqUser._id);
-    await photo.save();
+        photo.likes.push(reqUser._id);
+        await photo.save();
 
-    return res.status(200).json({ photoId: id, userId: reqUser._id, message: 'A foto foi curtida.' });
+        return res.status(200).json({ photoId: id, userId: reqUser._id, message: 'A foto foi curtida.' });
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
+    }
 }
 
 const commentPhoto = async (req, res) => {
@@ -118,26 +142,30 @@ const commentPhoto = async (req, res) => {
     const { comment } = req.body;
     const reqUser = req.user;
 
-    const user = await User.findById(reqUser._id);
-    const photo = await Photo.findById(id);
+    try {
+        const user = await User.findById(reqUser._id);
+        const photo = await Photo.findById(mongoose.Types.ObjectId(id));
 
-    if (!photo)
-        return res.status(404).json({ errors: ['Foto não encontrada.'] });
+        if (!photo)
+            return res.status(404).json({ errors: ['Foto não encontrada.'] });
 
-    const userComment = {
-        comment,
-        userName: user.name,
-        userImage: user.profileImage,
-        userId: user._id
+        const userComment = {
+            comment,
+            userName: user.name,
+            userImage: user.profileImage,
+            userId: user._id
+        }
+
+        photo.comments.push(userComment);
+        await photo.save();
+
+        return res.status(200).json({
+            comment: userComment,
+            message: 'O comentário foi adicionado com sucesso!'
+        });
+    } catch (error) {
+        return res.status(422).json({ errors: ['Houve um problema, por favor tente novamente mais tarde.'] });
     }
-
-    photo.comments.push(userComment);
-    await photo.save();
-
-    return res.status(200).json({
-        comment: userComment,
-        message: 'O comentário foi adicionado com sucesso!'
-    });
 }
 
 const searchPhotos = async (req, res) => {

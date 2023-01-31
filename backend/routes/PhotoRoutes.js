@@ -8,9 +8,10 @@ const validate = require('../middlewares/handleValidation');
 const { imageUploadValidation } = require('../middlewares/imageUpload');
 
 router.get('/', authGuard, getAllPhotos);
+router.get('/search', authGuard, searchPhotos);
 router.get('/:id', authGuard, getPhotoById);
 router.get('/user/:id', authGuard, getUserPhotos);
-router.get('/search', authGuard, searchPhotos);
+
 
 router.post('/', authGuard, imageUploadValidation, photoInsertValidation(), validate, insertPhoto);
 
