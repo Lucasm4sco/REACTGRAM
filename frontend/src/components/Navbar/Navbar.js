@@ -18,8 +18,11 @@ const Navbar = () => {
     const handleSearch = (e) => {
         e.preventDefault();
 
-        if (query)
-            return navigate(`/search?q=${query}`)
+        if (!query)
+            return
+
+        setQuery('');
+        return navigate(`/search?q=${query}`)
     }
 
     const handleLogout = () => {

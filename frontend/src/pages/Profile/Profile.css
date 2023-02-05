@@ -11,6 +11,12 @@
     margin: .8em 0;
 }
 
+#profile .btn {
+    display: block;
+    max-width: 80px;
+    margin: .1em;
+}
+
 .profile-header {
     display: flex;
     align-items: center;
@@ -37,7 +43,7 @@
     flex-wrap: wrap;
 }
 
-.photos-container > p {
+.photos-container>p {
     text-align: center;
     width: 100%;
     margin: 1em;

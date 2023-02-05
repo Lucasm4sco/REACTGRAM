@@ -10,7 +10,6 @@ const initialState = {
     loading: false
 };
 
-// Register an user and sign in
 export const register = createAsyncThunk('auth/register',
     async (user, thunkAPI) => {
         const data = await authService.register(user);
@@ -18,6 +17,7 @@ export const register = createAsyncThunk('auth/register',
         if (data.errors)
             return thunkAPI.rejectWithValue(data.errors[0]);
 
+        localStorage.setItem('user', JSON.stringify(data));
         return data;
     }
 );
@@ -35,6 +35,7 @@ export const login = createAsyncThunk('auth/login',
         if (data.errors)
             return thunkAPI.rejectWithValue(data.errors[0]);
 
+        localStorage.setItem('user', JSON.stringify(data))
         return data;
     }
 );
